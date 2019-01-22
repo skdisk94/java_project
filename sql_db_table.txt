@@ -1,0 +1,65 @@
+CREATE TABLE `admins` (
+	`a_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`a_name` VARCHAR(10) NOT NULL,
+	`a_password` CHAR(60) NOT NULL COLLATE 'utf8_bin',
+	`a_dept` VARCHAR(20) NOT NULL,
+	`a_tel` VARCHAR(16) NULL DEFAULT NULL,
+	PRIMARY KEY (`a_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+---------------------------------------
+CREATE TABLE `customers` (
+	`c_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`c_name` VARCHAR(10) NOT NULL,
+	`c_password` CHAR(60) NOT NULL COLLATE 'utf8_bin',
+	`c_email` VARCHAR(20) NOT NULL,
+	`c_tel` VARCHAR(16) NULL DEFAULT NULL,
+	PRIMARY KEY (`c_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+---------------------------------------
+CREATE TABLE `orders` (
+	`o_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`o_customerId` INT(10) UNSIGNED NOT NULL,
+	`o_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`o_price` INT(11) NULL DEFAULT '0',
+	PRIMARY KEY (`o_id`),
+	INDEX `o_customerId` (`o_customerId`),
+	CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`o_customerId`) REFERENCES `customers` (`c_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+---------------------------------------
+CREATE TABLE `products` (
+	`p_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`p_name` VARCHAR(20) NOT NULL,
+	`p_unitPrice` INT(11) NULL DEFAULT '0',
+	`p_imgName` VARCHAR(80) NULL DEFAULT NULL,
+	`p_description` VARCHAR(256) NULL DEFAULT NULL,
+	PRIMARY KEY (`p_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=30041
+;
+---------------------------------------
+CREATE TABLE `sold_products` (
+	`s_orderId` INT(10) UNSIGNED NOT NULL,
+	`s_productId` INT(10) UNSIGNED NOT NULL,
+	`s_quantity` INT(11) NULL DEFAULT '0',
+	PRIMARY KEY (`s_orderId`, `s_productId`),
+	INDEX `s_productId` (`s_productId`),
+	CONSTRAINT `sold_products_ibfk_1` FOREIGN KEY (`s_orderId`) REFERENCES `orders` (`o_id`),
+	CONSTRAINT `sold_products_ibfk_2` FOREIGN KEY (`s_productId`) REFERENCES `products` (`p_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+---------------------------------------
+
+
